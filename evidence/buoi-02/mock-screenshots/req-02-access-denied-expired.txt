@@ -1,0 +1,39 @@
+=== REQUEST 2: POST /access/check - Access DENIED (Expired) ===
+Timestamp: 2026-05-26T14:31:00Z
+Scenario: Contractor whose access has expired attempts entry
+
+Command:
+curl -X POST http://localhost:4010/access/check \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cardId": "CTR005678",
+    "gateId": "LOBBY_01",
+    "correlationId": "660f9500-f3ac-52e5-b827-557766551111",
+    "timestamp": "2026-05-26T14:31:00Z"
+  }'
+
+Response:
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4998
+X-RateLimit-Reset: 1748326800
+
+{
+  "decision": "DENY",
+  "policyId": "POL_CONTRACTOR_TEMP",
+  "reasonCode": "EXPIRED",
+  "expiresAt": null,
+  "decisionId": "660f9500-f3ac-52e5-b827-557766551111",
+  "processingTimeMs": 38,
+  "warnings": null
+}
+
+Analysis:
+✓ Request accepted with valid Bearer token
+✓ Contractor (CTR005678) matched policy POL_CONTRACTOR_TEMP, but access expired
+✓ reasonCode = "EXPIRED" indicates policy contract has ended
+✓ expiresAt = null (policy no longer valid)
+✓ Decision ID generated for audit investigation
+✓ Processing time 38ms acceptable

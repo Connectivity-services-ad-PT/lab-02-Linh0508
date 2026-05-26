@@ -1,0 +1,38 @@
+=== REQUEST 3: POST /access/check - Bad Request (Invalid cardId) ===
+Timestamp: 2026-05-26T14:32:00Z
+Scenario: Card reader sends malformed cardId (exceeds max length)
+
+Command:
+curl -X POST http://localhost:4010/access/check \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cardId": "THIS_IS_A_VERY_LONG_CARD_ID_THAT_EXCEEDS_THE_50_CHARACTER_LIMIT_SPECIFIED_IN_THE_API",
+    "gateId": "LOBBY_01",
+    "correlationId": "770f9600-g4bd-63f6-c938-668877662222"
+  }'
+
+Response:
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4997
+X-RateLimit-Reset: 1748326800
+
+{
+  "type": "https://api.campus.local/problems/invalid-card-id",
+  "status": 400,
+  "title": "Invalid card ID format",
+  "detail": "cardId must be between 1 and 50 characters; received 88 characters",
+  "instance": "/access/check",
+  "correlationId": "770f9600-g4bd-63f6-c938-668877662222",
+  "timestamp": "2026-05-26T14:32:00Z"
+}
+
+Analysis:
+✓ RFC 7807 Problem Details format used for error response
+✓ Clear error title and detail for consumer to log/debug
+✓ Instance URI identifies the problematic endpoint
+✓ correlationId returned for request tracing
+✓ Timestamp shows when error occurred
+✓ Consumer must fix cardId length and retry

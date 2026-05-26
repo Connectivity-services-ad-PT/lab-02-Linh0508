@@ -1,0 +1,32 @@
+=== REQUEST 5: GET /decisions/{decisionId} - Not Found (Audit Record Expired) ===
+Timestamp: 2026-05-26T14:34:00Z
+Scenario: Consumer attempts to query audit record for decision made 60+ days ago (outside retention window)
+
+Command:
+curl -X GET http://localhost:4010/decisions/550e8400-e29b-41d4-a716-446655440000 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Accept: application/json"
+
+Response:
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4995
+X-RateLimit-Reset: 1748326800
+
+{
+  "type": "https://api.campus.local/problems/not-found",
+  "status": 404,
+  "title": "Decision Not Found",
+  "detail": "Decision record 550e8400-e29b-41d4-a716-446655440000 not found in system; records are retained for 30 days only (SLA retention: 30 days)",
+  "instance": "/decisions/550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2026-05-26T14:34:00Z"
+}
+
+Analysis:
+✓ RFC 7807 Problem Details format
+✓ Clear explanation that decision is outside retention window (30 days)
+✓ Indicates retention SLA to consumer
+✓ Instance shows which decision ID was not found
+✓ Consumer should adjust query to recent decisions or contact admin for archive
+✓ Request was properly authenticated; error is data-related, not auth

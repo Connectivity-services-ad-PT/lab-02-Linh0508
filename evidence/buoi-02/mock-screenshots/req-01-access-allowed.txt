@@ -1,0 +1,38 @@
+=== REQUEST 1: POST /access/check - Access ALLOWED ===
+Timestamp: 2026-05-26T14:30:00Z
+Scenario: Employee with valid policy attempts access during business hours
+
+Command:
+curl -X POST http://localhost:4010/access/check \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cardId": "EMP001234",
+    "gateId": "LOBBY_01",
+    "correlationId": "550e8400-e29b-41d4-a716-446655440000",
+    "timestamp": "2026-05-26T14:30:00Z"
+  }'
+
+Response:
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4999
+X-RateLimit-Reset: 1748326800
+
+{
+  "decision": "ALLOW",
+  "policyId": "POL_EMP_STANDARD",
+  "reasonCode": "VALID",
+  "expiresAt": "2027-05-26T00:00:00Z",
+  "decisionId": "550e8400-e29b-41d4-a716-446655440000",
+  "processingTimeMs": 42,
+  "warnings": null
+}
+
+Analysis:
+✓ Request accepted with valid Bearer token
+✓ Employee (EMP001234) matches policy POL_EMP_STANDARD
+✓ Policy is valid (not expired, not revoked)
+✓ Decision ID generated for audit trail
+✓ Processing time 42ms is well under 100ms SLA

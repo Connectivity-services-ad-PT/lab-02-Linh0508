@@ -1,0 +1,37 @@
+=== REQUEST 4: POST /access/check - Unauthorized (Missing Bearer Token) ===
+Timestamp: 2026-05-26T14:33:00Z
+Scenario: Gate attempts access check without authentication header
+
+Command:
+curl -X POST http://localhost:4010/access/check \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cardId": "EMP001234",
+    "gateId": "LOBBY_01",
+    "correlationId": "880f9700-h5ce-74g7-d049-779988773333"
+  }'
+
+Response:
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+WWW-Authenticate: Bearer realm="Core Business", error="invalid_token"
+X-RateLimit-Limit: 5000
+X-RateLimit-Remaining: 4996
+X-RateLimit-Reset: 1748326800
+
+{
+  "type": "https://api.campus.local/problems/unauthorized",
+  "status": 401,
+  "title": "Unauthorized",
+  "detail": "Authorization header missing or token invalid; Bearer token required with 'access:read' scope",
+  "instance": "/access/check",
+  "timestamp": "2026-05-26T14:33:00Z"
+}
+
+Analysis:
+✓ RFC 7807 Problem Details format
+✓ WWW-Authenticate header indicates Bearer scheme required
+✓ Clear message that token is missing or invalid
+✓ Indicates required scope (access:read)
+✓ Gate must obtain valid JWT token from auth service
+✓ No correlationId in error (authentication failed before request processing)

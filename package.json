@@ -11,5 +11,7 @@
     "mock": "prism mock openapi.yaml --port 4010",
     "test:mock:curl": "bash scripts/test_mock_with_curl.sh"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@stoplight/spectral-cli": "^6.16.0"
+  }
 }
