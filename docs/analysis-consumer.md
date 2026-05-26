@@ -4,7 +4,7 @@
 - **Loại**: REST sync
 - **Consumer service**: Access Gate (gọi API để check quyền)
 - **Provider service**: Core Business (cung cấp policy decision)
-- **Người viết**: (Nhóm Consumer)
+- **Người viết**: Nguyễn Thị Thuỳ linh
 - **Ngày**: 2026-05-26
 
 ---
